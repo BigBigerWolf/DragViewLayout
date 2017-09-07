@@ -141,20 +141,21 @@ public class DragViewLayout extends FrameLayout {
     }
 
     /**
-     * 添加子view的同时，初始化子view的位置，若不传PositionEntry默认为0,0位置
+     * 添加子view的同时，初始化子view的位置，默认为0,0位置
+     *
      * @param child
      */
     @Override
     public void addView(View child) {
         FrameLayout.LayoutParams layoutParams = (LayoutParams) child.getLayoutParams();
         Object tag = child.getTag();
-        if (tag != null) {
-            PositionEntry positionEntry = (PositionEntry) tag;
-            layoutParams.setMargins(positionEntry.x, positionEntry.y, 0, 0);
-            super.addView(child, layoutParams);
-        } else {
-            super.addView(child);
+        if (tag == null) {
+            child.setTag(new PositionEntry());
+            tag = child.getTag();
         }
+        PositionEntry positionEntry = (PositionEntry) tag;
+        layoutParams.setMargins(positionEntry.x, positionEntry.y, 0, 0);
+        super.addView(child, layoutParams);
     }
 
     /**

@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         ImageView imageViewForAdd1 = new ImageView(this);
         imageViewForAdd1.setImageResource(R.mipmap.ic_launcher);
         imageViewForAdd1.setLayoutParams(layoutParams1);
-        //控制初始化位置
+        //控制初始化位置,默认0,0
         PositionEntry positionEntry1 = new PositionEntry();
         positionEntry1.x = 100;
         positionEntry1.y = 100;
