@@ -17,7 +17,6 @@ public class DragViewLayout extends FrameLayout {
     private static final String TAG = "DragViewLayout";
     private ViewDragHelper mViewDragHelper;
     private View dragView;
-    //当前触碰view的状态
     private int states = ViewDragHelper.STATE_IDLE;
     private boolean isAllViewCanDrag;
 
@@ -46,21 +45,11 @@ public class DragViewLayout extends FrameLayout {
         if (getChildCount() > 0) {
             dragView = getChildAt(getChildCount() - 1);
         }
-        //每次重新layout时读取本身的位置，初始化为0，0
-        for (int i = 0; i < getChildCount(); i++) {
-            View viewChild = getChildAt(i);
-            Object tag = viewChild.getTag();
-            if (tag != null) {
-                PositionEntry positionEntry = (PositionEntry) tag;
-                FrameLayout.LayoutParams layoutParams = (LayoutParams) viewChild.getLayoutParams();
-                layoutParams.setMargins(positionEntry.x, positionEntry.y, 0, 0);
-                viewChild.setLayoutParams(layoutParams);
-            }
-        }
     }
 
     /**
      * 控制是否所有view可以拖动。默认只有最后一个可拖动
+     *
      * @param isAllViewCanDrag
      */
     public void setAllViewCanDrag(boolean isAllViewCanDrag) {
@@ -134,6 +123,7 @@ public class DragViewLayout extends FrameLayout {
                     break;
                 case ViewDragHelper.STATE_IDLE://view没有被拖动
                     states = ViewDragHelper.STATE_IDLE;
+                    refreshPosition();
                     break;
             }
             super.onViewDragStateChanged(state);
@@ -141,16 +131,51 @@ public class DragViewLayout extends FrameLayout {
 
         @Override
         public int getViewHorizontalDragRange(View child) {
-            return  child.getWidth();
+            return child.getWidth();
         }
 
         @Override
         public int getViewVerticalDragRange(View child) {
             return child.getHeight();
         }
-
     }
 
+    /**
+     * 添加子view的同时，初始化子view的位置，若不传PositionEntry默认为0,0位置
+     * @param child
+     */
+    @Override
+    public void addView(View child) {
+        FrameLayout.LayoutParams layoutParams = (LayoutParams) child.getLayoutParams();
+        Object tag = child.getTag();
+        if (tag != null) {
+            PositionEntry positionEntry = (PositionEntry) tag;
+            layoutParams.setMargins(positionEntry.x, positionEntry.y, 0, 0);
+            super.addView(child, layoutParams);
+        } else {
+            super.addView(child);
+        }
+    }
+
+    /**
+     * 这里需要注意的是重新设置layoutparams的时候会重新调用onLayout所以放到onLayout里面会造成递归
+     */
+    private void refreshPosition() {
+        for (int i = 0; i < getChildCount(); i++) {
+            View viewChild = getChildAt(i);
+            Object tag = viewChild.getTag();
+            if (tag != null) {
+                PositionEntry positionEntry = (PositionEntry) tag;
+                FrameLayout.LayoutParams layoutParams = (LayoutParams) viewChild.getLayoutParams();
+                layoutParams.setMargins(positionEntry.x, positionEntry.y, 0, 0);
+                viewChild.setLayoutParams(layoutParams);
+            }
+        }
+    }
+
+    /**
+     * @return 当前触碰view的状态
+     */
     public int getStates() {
         return states;
     }

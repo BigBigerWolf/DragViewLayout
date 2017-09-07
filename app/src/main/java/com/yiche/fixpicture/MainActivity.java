@@ -32,7 +32,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         ImageView imageViewForAdd1 = new ImageView(this);
         imageViewForAdd1.setImageResource(R.mipmap.ic_launcher);
         imageViewForAdd1.setLayoutParams(layoutParams1);
-        imageViewForAdd1.setTag(new PositionEntry());
+        //控制初始化位置
+        PositionEntry positionEntry1 = new PositionEntry();
+        positionEntry1.x = 100;
+        positionEntry1.y = 100;
+        imageViewForAdd1.setTag(positionEntry1);
 
         imageViewForAdd1.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -47,7 +51,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         imageViewForAdd2 = new ImageView(this);
         imageViewForAdd2.setImageResource(R.mipmap.about_logo);
         imageViewForAdd2.setLayoutParams(layoutParams2);
-        imageViewForAdd2.setTag(new PositionEntry());
+        PositionEntry positionEntry2 = new PositionEntry();
+        positionEntry2.x = 200;
+        positionEntry2.y = 200;
+        imageViewForAdd2.setTag(positionEntry2);
 
         imageViewForAdd2.setOnClickListener(new View.OnClickListener() {
             @Override
